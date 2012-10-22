@@ -1,3 +1,5 @@
+//Added by qt3to4:
+#include <q3mimefactory.h>
 /****************************************************************************
 ** ui.h extension file, included from the uic-generated form implementation.
 **
@@ -49,7 +51,7 @@ void SelectNicForm::setAsDefault(bool setIp)
 	// Restore pixmap of the old default
 	if (idxDefault != -1) {
 		nicListBox->changeItem(
-			QPixmap::fromMimeSource("kcmpci16.png"),
+			qPixmapFromMimeSource("kcmpci16.png"),
 			nicListBox->text(idxDefault),
 			idxDefault);
 	}
@@ -57,7 +59,7 @@ void SelectNicForm::setAsDefault(bool setIp)
 	// Set pixmap of the default
 	idxDefault = idxNewDefault;
 	nicListBox->changeItem(
-		QPixmap::fromMimeSource("twinkle16.png"),
+		qPixmapFromMimeSource("twinkle16.png"),
 		nicListBox->text(idxDefault),
 		idxDefault);	
 	

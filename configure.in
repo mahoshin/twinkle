@@ -101,7 +101,7 @@ else
 fi
 
 # Without this macro, compiling on non-kde systems does not work
-AC_PATH_QT
+# !!!AC_PATH_QT
 
 # Check if lrelease is available
 AC_CHECK_PROG(have_lrelease, lrelease, yes, no)
@@ -157,7 +157,7 @@ fi
 if test "x$have_kde" = "xyes"
 then
 	KDE_SET_PREFIX
-	AC_PATH_KDE
+# !!!	AC_PATH_KDE
 
 	AC_CHECK_FILES(${kde_includes}/kapplication.h,
 		[], 
@@ -296,7 +296,7 @@ AC_CHECK_LIB(boost_regex, main, [
 		echo "LIBS += -lboost_regex-gcc" >> $QT_INCL_PRO],
 		[AC_MSG_ERROR([libboost_regex library is missing (boost package).])])])
 
-ms_CHECK_LRELEASE()
+# ms_CHECK_LRELEASE()
 	
 dnl $QTDIR/bin/qmake -o src/gui/Makefile src/gui/twinkle.pro
 dnl Command above is incorrect because srcdir may differ from builddir

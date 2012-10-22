@@ -26,7 +26,7 @@
 #include <qapplication.h>
 #include <qtranslator.h>
 #include <qmime.h>
-#include <qprogressdialog.h>
+#include <q3progressdialog.h>
 #include <qtextcodec.h>
 
 #include "mphoneform.h"
@@ -288,7 +288,7 @@ void parse_main_args(int argc, char **argv, bool &cli_mode, bool &override_lock_
 		} else if (strcmp(argv[i], "--version") == 0) {
 			// Get version
 			QString s = sys_config->about(false).c_str();
-			cout << s;
+			cout << s.ascii();
 			exit(0);
 		} else if (strcmp(argv[i], "-c") == 0) {
 			// CLI mode
@@ -486,7 +486,7 @@ QApplication *create_user_interface(bool cli_mode, int argc, char **argv, QTrans
 		// Store the defualt mime source factory for the embedded icons.
 		// This is created by Qt. The KApplication constructor seems to destroy
 		// this default.
-		QMimeSourceFactory *factory_qt = QMimeSourceFactory::takeDefaultFactory();
+		Q3MimeSourceFactory *factory_qt = Q3MimeSourceFactory::takeDefaultFactory();
 		
 		// Initialize the KApplication
 		KCmdLineArgs::init(argc, argv, "twinkle", PRODUCT_NAME, "Soft phone",
@@ -495,13 +495,13 @@ QApplication *create_user_interface(bool cli_mode, int argc, char **argv, QTrans
 		MEMMAN_NEW(qa);
 		
 		// Store the KDE mime source factory
-		QMimeSourceFactory *factory_kde = QMimeSourceFactory::takeDefaultFactory();
+		Q3MimeSourceFactory *factory_kde = Q3MimeSourceFactory::takeDefaultFactory();
 		
 		// Make the Qt factory the default to make the embedded icons work.
-		QMimeSourceFactory::setDefaultFactory(factory_qt);
+		Q3MimeSourceFactory::setDefaultFactory(factory_qt);
 		
 		// Add the KDE factory
-		QMimeSourceFactory::addFactory(factory_kde);
+		Q3MimeSourceFactory::addFactory(factory_kde);
 #else
 		int tmp = argc;
 		qa = new t_twinkle_application(tmp, argv);
@@ -775,15 +775,15 @@ int main( int argc, char ** argv )
 					if (cli_mode) {
 						error_msg += QString("You can only run multiple profiles for different users.").ascii();
 						error_msg += "\n";
-						error_msg += QString("If these are users for different domains, then enable the following option in your user profile (SIP protocol):");
+						error_msg += QString("If these are users for different domains, then enable the following option in your user profile (SIP protocol):").ascii();
 						error_msg += "\n";
-						error_msg += QString("Use domain name to create a unique contact header");
+						error_msg += QString("Use domain name to create a unique contact header").ascii();
 					} else {
 						error_msg += qApp->translate("GUI", "You can only run multiple profiles for different users.").ascii();
 						error_msg += "\n";
-						error_msg += qApp->translate("GUI", "If these are users for different domains, then enable the following option in your user profile (SIP protocol)");
+						error_msg += qApp->translate("GUI", "If these are users for different domains, then enable the following option in your user profile (SIP protocol)").ascii();
 						error_msg += ":\n";
-						error_msg += qApp->translate("GUI", "Use domain name to create a unique contact header");
+						error_msg += qApp->translate("GUI", "Use domain name to create a unique contact header").ascii();
 					}
 					ui->cb_show_msg(error_msg, MSG_CRITICAL);
 					profile_selected = false;

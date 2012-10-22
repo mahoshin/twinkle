@@ -21,12 +21,18 @@
 // 2006 Modified by Michel de Boer
 
 #include "freedesksystray.h"
+//Added by qt3to4:
+#include <q3mimefactory.h>
+#include <QPixmap>
+#include <QLabel>
+#include <QMouseEvent>
+#include <Q3PopupMenu>
 
 FreeDeskSysTray::FreeDeskSysTray ( QWidget *pParent , const char *pszName )
-    : QLabel(pParent, pszName, WMouseNoMask | WRepaintNoErase | WType_TopLevel | WStyle_Customize | WStyle_NoBorder | WStyle_StaysOnTop)
+    : QLabel(pParent, pszName, Qt::WMouseNoMask | Qt::WNoAutoErase | Qt::WType_TopLevel | Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_StaysOnTop)
 {
   mainWindow = pParent;
-  trayMenu = new QPopupMenu(this);
+  trayMenu = new Q3PopupMenu(this);
 }
 
 void FreeDeskSysTray::dock ()
@@ -34,7 +40,7 @@ void FreeDeskSysTray::dock ()
   trayMenu->insertSeparator();
   trayMenu->insertItem(tr("Show/Hide"), this, SLOT(slotMenuItemShow())) ;
   
-  QIconSet quitIcon(QPixmap::fromMimeSource("exit.png"));
+  QIcon quitIcon(qPixmapFromMimeSource("exit.png"));
   trayMenu->insertItem(quitIcon, tr("Quit"), this, SLOT(slotMenuItemQuit())) ;
   
   Display *dpy = QPaintDevice::x11AppDisplay();
@@ -67,7 +73,8 @@ void FreeDeskSysTray::dock ()
 
   Atom trayAtom;
   // KDE 3
-  WId forWin = mainWindow ? mainWindow->topLevelWidget()->winId() : qt_xrootwin();
+  //WId forWin = mainWindow ? mainWindow->topLevelWidget()->winId() : qt_xrootwin();
+  WId forWin = mainWindow->topLevelWidget()->winId();
   trayAtom = XInternAtom(dpy, "_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", false);
   XChangeProperty(dpy, trayWin, trayAtom, XA_WINDOW, 32, PropModeReplace, (unsigned char *) &forWin, 1);
   
@@ -97,11 +104,11 @@ void FreeDeskSysTray::mousePressEvent ( QMouseEvent *pMouseEvent )
   switch (pMouseEvent->button())
   {
 
-  case LeftButton:
+  case Qt::LeftButton:
     slotMenuItemShow();
     break;
 
-  case RightButton:
+  case Qt::RightButton:
     showContextMenu(pMouseEvent->globalPos());
     break;
 
@@ -121,15 +128,15 @@ void FreeDeskSysTray::setPixmapOverlay ( const QPixmap& pmOverlay )
   pm.convertFromImage(pParent->icon()->convertToImage().smoothScale(22, 22), 0);
 
   // Merge with the overlay pixmap.
-  QBitmap bmMask(*pm.mask());
-  bitBlt(&bmMask, 0, 0, pmOverlay.mask(), 0, 0, -1, -1, Qt::OrROP);
+  QBitmap bmMask(pm.mask());
+  //bitBlt(&bmMask, 0, 0, pmOverlay.mask(), 0, 0, -1, -1, Qt::OrROP);
   pm.setMask(bmMask);
   bitBlt(&pm, 0, 0, &pmOverlay);
 
   QLabel::setPixmap(pm);
 }
 
-QPopupMenu *FreeDeskSysTray::contextMenu()
+Q3PopupMenu *FreeDeskSysTray::contextMenu()
 {
 	return trayMenu;
 }

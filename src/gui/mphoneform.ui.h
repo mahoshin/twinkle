@@ -26,6 +26,15 @@
 
 #include "twinkle_config.h"
 #include "twinklesystray.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <QMouseEvent>
+#include <QCloseEvent>
+#include <q3mimefactory.h>
+#include <QKeyEvent>
+#include <QEvent>
+#include <Q3Frame>
+#include <Q3PopupMenu>
 
 // Time (s) that the conversation timer of a line should stay visible after
 // a call has ended
@@ -50,11 +59,11 @@ void MphoneForm::init()
 	sysTray = 0;
 	
 	// Popup menu for a single buddy
-	QIconSet inviteIcon(QPixmap::fromMimeSource("invite.png"));
-	QIconSet messageIcon(QPixmap::fromMimeSource("message.png"));
-	QIconSet editIcon(QPixmap::fromMimeSource("edit16.png"));
-	QIconSet deleteIcon(QPixmap::fromMimeSource("editdelete.png"));
-	buddyPopupMenu = new QPopupMenu(this);
+	QIcon inviteIcon(qPixmapFromMimeSource("invite.png"));
+	QIcon messageIcon(qPixmapFromMimeSource("message.png"));
+	QIcon editIcon(qPixmapFromMimeSource("edit16.png"));
+	QIcon deleteIcon(qPixmapFromMimeSource("editdelete.png"));
+	buddyPopupMenu = new Q3PopupMenu(this);
 	MEMMAN_NEW(buddyPopupMenu);
 	buddyPopupMenu->insertItem(inviteIcon, tr("&Call..."), this, SLOT(doCallBuddy()));
 	buddyPopupMenu->insertItem(messageIcon, tr("Instant &message..."), this, SLOT(doMessageBuddy()));
@@ -62,27 +71,27 @@ void MphoneForm::init()
 	buddyPopupMenu->insertItem(deleteIcon, tr("&Delete"), this, SLOT(doDeleteBuddy()));
 	
 	// Change availibility sub popup menu
-	changeAvailabilityPopupMenu = new QPopupMenu(this);
+	changeAvailabilityPopupMenu = new Q3PopupMenu(this);
 	MEMMAN_NEW(changeAvailabilityPopupMenu);
-	QIconSet availOnlineIcon(QPixmap::fromMimeSource("presence_online.png"));
-	QIconSet availOfflineIcon(QPixmap::fromMimeSource("presence_offline.png"));
+	QIcon availOnlineIcon(qPixmapFromMimeSource("presence_online.png"));
+	QIcon availOfflineIcon(qPixmapFromMimeSource("presence_offline.png"));
 	changeAvailabilityPopupMenu->insertItem(availOfflineIcon, tr("O&ffline"), this, 
 						SLOT(doAvailabilityOffline()));
 	changeAvailabilityPopupMenu->insertItem(availOnlineIcon, tr("&Online"), this, 
 						SLOT(doAvailabilityOnline()));
 	
 	// Popup menu for a buddy list (click on profile name)
-	QIconSet changeAvailabilityIcon(QPixmap::fromMimeSource("presence_online.png"));
-	QIconSet addIcon(QPixmap::fromMimeSource("buddy.png"));
-	buddyListPopupMenu = new QPopupMenu(this);
+	QIcon changeAvailabilityIcon(qPixmapFromMimeSource("presence_online.png"));
+	QIcon addIcon(qPixmapFromMimeSource("buddy.png"));
+	buddyListPopupMenu = new Q3PopupMenu(this);
 	MEMMAN_NEW(buddyListPopupMenu);
 	buddyListPopupMenu->insertItem(changeAvailabilityIcon, tr("&Change availability"), 
 				       changeAvailabilityPopupMenu);
 	buddyListPopupMenu->insertItem(addIcon, tr("&Add buddy..."), this, SLOT(doAddBuddy()));
 	
 	// Tool tip for buddy list
-	buddyToolTip = new BuddyListViewTip(buddyListView);
-	MEMMAN_NEW(buddyToolTip);
+	/*buddyToolTip = new BuddyListViewTip(buddyListView);
+	MEMMAN_NEW(buddyToolTip);*/
 	
 	// Line timers
 	lineTimer1 = 0;
@@ -138,7 +147,7 @@ void MphoneForm::init()
 		sysTray = new t_twinkle_sys_tray(this, "twinkle_sys_tray");
 		MEMMAN_NEW(sysTray);
 		sysTray->setPixmap(
-				QPixmap::fromMimeSource("sys_idle_dis.png"));
+				qPixmapFromMimeSource("sys_idle_dis.png"));
 		sysTray->setCaption(PRODUCT_NAME);
 		QToolTip::add(sysTray, PRODUCT_NAME);
 		
@@ -146,7 +155,7 @@ void MphoneForm::init()
 #ifdef HAVE_KDE
 		KPopupMenu *menu;
 #else
-		QPopupMenu *menu;
+		Q3PopupMenu *menu;
 #endif
 		menu = sysTray->contextMenu();
 		
@@ -279,8 +288,8 @@ void MphoneForm::destroy()
 	delete changeAvailabilityPopupMenu;
 	MEMMAN_DELETE(buddyListPopupMenu);
 	delete buddyListPopupMenu;
-	MEMMAN_DELETE(buddyToolTip);
-	delete buddyToolTip;
+	/*MEMMAN_DELETE(buddyToolTip);
+	delete buddyToolTip;*/
 }
 
 QString MphoneForm::lineSubstate2str( int line) {
@@ -339,7 +348,7 @@ void MphoneForm::display( const QString &s )
 	if (displayContents.size() > 100) {
 		displayContents.pop_front();
 	}
-	
+
 	displayTextEdit->setText(displayContents.join("\n"));
 	
 	// Set cursor position at the end of text
@@ -493,14 +502,14 @@ void MphoneForm::updateLineEncryptionState(int line)
 			
 		if (!zrtp_sas_confirmed) {
 			toolTip.append("\n").append(tr("Click to confirm SAS."));
-			cryptLabel->setFrameStyle(QFrame::Panel | QFrame::Raised);
+			cryptLabel->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
 			cryptLabel->setPixmap(
-				QPixmap::fromMimeSource("encrypted.png"));
+				qPixmapFromMimeSource("encrypted.png"));
 		} else {
 			toolTip.append("\n").append(tr("Click to clear SAS verification."));
-			cryptLabel->setFrameStyle(QFrame::NoFrame);
+			cryptLabel->setFrameStyle(Q3Frame::NoFrame);
 			cryptLabel->setPixmap(
-				QPixmap::fromMimeSource("encrypted_verified.png"));
+				qPixmapFromMimeSource("encrypted_verified.png"));
 		}
 
 		QToolTip::add(cryptLabel, toolTip);
@@ -569,11 +578,11 @@ void MphoneForm::updateLineStatus(int line)
 		referLabel->show();
 		if (is_transfer_consult) {
 			referLabel->setPixmap(
-				QPixmap::fromMimeSource("consult-xfer.png"));
+				qPixmapFromMimeSource("consult-xfer.png"));
 			toolTip = tr("Transfer consultation");
 		} else {
 			referLabel->setPixmap(
-				QPixmap::fromMimeSource("cf.png"));
+				qPixmapFromMimeSource("cf.png"));
 			toolTip = tr("Transferring call");
 		}
 		QToolTip::add(referLabel, toolTip);
@@ -592,29 +601,29 @@ void MphoneForm::updateLineStatus(int line)
 		break;
 	case LSSUB_SEIZED:
 	case LSSUB_OUTGOING_PROGRESS:
-		statLabel->setPixmap(QPixmap::fromMimeSource("stat_outgoing.png"));
+		statLabel->setPixmap(qPixmapFromMimeSource("stat_outgoing.png"));
 		statLabel->show();
 		break;
 	case LSSUB_INCOMING_PROGRESS:
-		statLabel->setPixmap(QPixmap::fromMimeSource("stat_ringing.png"));
+		statLabel->setPixmap(qPixmapFromMimeSource("stat_ringing.png"));
 		statLabel->show();
 		break;
 	case LSSUB_ANSWERING:
-		statLabel->setPixmap(QPixmap::fromMimeSource("gear.png"));
+		statLabel->setPixmap(qPixmapFromMimeSource("gear.png"));
 		statLabel->show();
 		break;
 	case LSSUB_ESTABLISHED:
 		if (phone->has_line_media(line)) {
-			statLabel->setPixmap(QPixmap::fromMimeSource(
+			statLabel->setPixmap(qPixmapFromMimeSource(
 					"stat_established.png"));
 		} else {
-			statLabel->setPixmap(QPixmap::fromMimeSource(
+			statLabel->setPixmap(qPixmapFromMimeSource(
 					"stat_established_nomedia.png"));
 		}
 		statLabel->show();
 		break;
 	case LSSUB_RELEASING:
-		statLabel->setPixmap(QPixmap::fromMimeSource("gear.png"));
+		statLabel->setPixmap(qPixmapFromMimeSource("gear.png"));
 		statLabel->show();
 		break;
 	default:
@@ -909,20 +918,20 @@ void MphoneForm::updateRegStatus()
 	// Set registration status
 	if (num_registered == user_list.size()) {
 		// All users are registered
-		statRegLabel->setPixmap(QPixmap::fromMimeSource("twinkle16.png"));
+		statRegLabel->setPixmap(qPixmapFromMimeSource("twinkle16.png"));
 	} else if (num_failed == user_list.size()) {
 		// All users failed to register
-		statRegLabel->setPixmap(QPixmap::fromMimeSource("reg_failed.png"));
+		statRegLabel->setPixmap(qPixmapFromMimeSource("reg_failed.png"));
 	} else if (num_registered > 0) {
 		// Some users are registered
-		statRegLabel->setPixmap(QPixmap::fromMimeSource(
+		statRegLabel->setPixmap(qPixmapFromMimeSource(
 				"twinkle16.png"));
 	} else if (num_failed > 0) {
 		// Some users failed, none are registered
-		statRegLabel->setPixmap(QPixmap::fromMimeSource("reg_failed.png"));
+		statRegLabel->setPixmap(qPixmapFromMimeSource("reg_failed.png"));
 	} else {
 		// No users are registered, no users failed
-		statRegLabel->setPixmap(QPixmap::fromMimeSource("twinkle16-disabled.png"));
+		statRegLabel->setPixmap(qPixmapFromMimeSource("twinkle16-disabled.png"));
 	}
 	
 	// Set tool tip with detailed info.
@@ -988,11 +997,11 @@ void MphoneForm::flashMWI()
 {
 	if (mwiFlashStatus) {
 		mwiFlashStatus = false;
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 				"mwi_none16.png"));
 	} else {
 		mwiFlashStatus = true;
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 				"mwi_new16.png"));
 	}
 }
@@ -1057,7 +1066,7 @@ void MphoneForm::updateMwi()
 	
 	// Set MWI icon
 	if (mwi_new_msgs) {
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 			"mwi_new16.png"));
 		mwiFlashStatus = true;
 		
@@ -1065,15 +1074,15 @@ void MphoneForm::updateMwi()
 		tmrFlashMWI.start(1000);
 	} else if (mwi_failure) {
 		tmrFlashMWI.stop();
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 			"mwi_failure16.png"));
 	} else if (mwi_known) {
 		tmrFlashMWI.stop();
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 			"mwi_none16.png"));
 	} else {
 		tmrFlashMWI.stop();
-		statMWILabel->setPixmap(QPixmap::fromMimeSource(
+		statMWILabel->setPixmap(qPixmapFromMimeSource(
 			"mwi_none16_dis.png"));
 	}
 	
@@ -1138,36 +1147,36 @@ void MphoneForm::updateServicesStatus()
 	// Set service status
 	if (num_dnd == user_list.size()) {
 		// All users enabled dnd
-		statDndLabel->setPixmap(QPixmap::fromMimeSource("cancel.png"));
+		statDndLabel->setPixmap(qPixmapFromMimeSource("cancel.png"));
 	} else if (num_dnd > 0) {
 		// Some users enabled dnd
-		statDndLabel->setPixmap(QPixmap::fromMimeSource("cancel.png"));
+		statDndLabel->setPixmap(qPixmapFromMimeSource("cancel.png"));
 	} else {
 		// No users enabeld dnd
-		statDndLabel->setPixmap(QPixmap::fromMimeSource("cancel-disabled.png"));
+		statDndLabel->setPixmap(qPixmapFromMimeSource("cancel-disabled.png"));
 	}
 	
 	if (num_cf == user_list.size()) {
 		// All users enabled redirecton
-		statCfLabel->setPixmap(QPixmap::fromMimeSource("cf.png"));
+		statCfLabel->setPixmap(qPixmapFromMimeSource("cf.png"));
 	} else if (num_cf > 0) {
 		// Some users enabled redirection
-		statCfLabel->setPixmap(QPixmap::fromMimeSource("cf.png"));
+		statCfLabel->setPixmap(qPixmapFromMimeSource("cf.png"));
 	} else {
 		// No users enabled redirection
-		statCfLabel->setPixmap(QPixmap::fromMimeSource("cf-disabled.png"));
+		statCfLabel->setPixmap(qPixmapFromMimeSource("cf-disabled.png"));
 	}
 	
 	if (num_auto_answer == user_list.size()) {
 		// All users enabled auto answer
-		statAaLabel->setPixmap(QPixmap::fromMimeSource("auto_answer.png"));
+		statAaLabel->setPixmap(qPixmapFromMimeSource("auto_answer.png"));
 	} else if (num_auto_answer > 0) {
 		// Some users enabled auto answer
-		statAaLabel->setPixmap(QPixmap::fromMimeSource(
+		statAaLabel->setPixmap(qPixmapFromMimeSource(
 				"auto_answer.png"));
 	} else {
 		// No users enabeld auto answer
-		statAaLabel->setPixmap(QPixmap::fromMimeSource(
+		statAaLabel->setPixmap(qPixmapFromMimeSource(
 				"auto_answer-disabled.png"));
 	}
 	
@@ -1220,7 +1229,7 @@ void MphoneForm::updateMissedCallStatus(int num_missed_calls)
 	clickDetails += tr("Click to see call history for details.").replace(' ', "&nbsp;");
 	clickDetails += "</i>";
 	if (num_missed_calls == 0) {
-		statMissedLabel->setPixmap(QPixmap::fromMimeSource("missed-disabled.png"));
+		statMissedLabel->setPixmap(qPixmapFromMimeSource("missed-disabled.png"));
 		QString status("<p>");
 		status += tr("You have no missed calls.").replace(' ', "&nbsp;");
 		status += "</p>";
@@ -1228,7 +1237,7 @@ void MphoneForm::updateMissedCallStatus(int num_missed_calls)
 		QToolTip::add(statMissedLabel, status);
 	} else {
 		statMissedLabel->setPixmap(
-			QPixmap::fromMimeSource("missed.png"));
+			qPixmapFromMimeSource("missed.png"));
 		
 		QString tip("<p>");
 		if (num_missed_calls == 1) {
@@ -1358,7 +1367,7 @@ void MphoneForm::updateSysTrayStatus()
 		icon_name += "_dis.png";
 	}
 	
-	sysTray->setPixmap(QPixmap::fromMimeSource(icon_name));
+	sysTray->setPixmap(qPixmapFromMimeSource(icon_name));
 }
 
 // Update menu status based on the number of active users
@@ -1414,10 +1423,10 @@ void MphoneForm::updateDiamondcardMenu()
 	static int adminCenterId = -1;
 	
 	// Sub menu's
-	static QPopupMenu *rechargeMenu = NULL;
-	static QPopupMenu *balanceHistoryMenu = NULL;
-	static QPopupMenu *callHistoryMenu = NULL;
-	static QPopupMenu *adminCenterMenu = NULL;
+	static Q3PopupMenu *rechargeMenu = NULL;
+	static Q3PopupMenu *balanceHistoryMenu = NULL;
+	static Q3PopupMenu *callHistoryMenu = NULL;
+	static Q3PopupMenu *adminCenterMenu = NULL;
 	
 	// Clear old menu
 	removeDiamondcardAction(rechargeId);
@@ -1450,10 +1459,10 @@ void MphoneForm::updateDiamondcardMenu()
 	}
 	else
 	{
-		rechargeMenu = new QPopupMenu(this);
-		balanceHistoryMenu = new QPopupMenu(this);
-		callHistoryMenu = new QPopupMenu(this);
-		adminCenterMenu = new QPopupMenu(this);
+		rechargeMenu = new Q3PopupMenu(this);
+		balanceHistoryMenu = new Q3PopupMenu(this);
+		callHistoryMenu = new Q3PopupMenu(this);
+		adminCenterMenu = new Q3PopupMenu(this);
 		// No MEMMAN registration as the popup menu may be automatically
 		// deleted by Qt on application close down. This would show up as
 		// a memory leak in MEMMAN.
@@ -1503,7 +1512,7 @@ void MphoneForm::removeDiamondcardAction(int &id)
 	}
 }
 
-void MphoneForm::removeDiamondcardMenu(QPopupMenu* &menu)
+void MphoneForm::removeDiamondcardMenu(Q3PopupMenu* &menu)
 {
 	if (menu) {
 		delete menu;
@@ -2181,8 +2190,8 @@ void MphoneForm::about()
 	QMessageBox mbAbout(PRODUCT_NAME, s.replace(' ', "&nbsp;"), 
 		    QMessageBox::Information, 
 		    QMessageBox::Ok | QMessageBox::Default,
-		    QMessageBox::NoButton, QMessageBox::NoButton);
-	mbAbout.setIconPixmap(QPixmap::fromMimeSource("twinkle48.png"));
+		    Qt::NoButton, Qt::NoButton);
+	mbAbout.setIconPixmap(qPixmapFromMimeSource("twinkle48.png"));
 	mbAbout.exec();
 }
 
@@ -2316,7 +2325,7 @@ void MphoneForm::newUsers(const list<string> &profiles)
 	}
 	
 	// Add new phone users
-	QProgressDialog progress(tr("Starting user profiles..."), "Abort", add_profile_list.size(), this,
+	Q3ProgressDialog progress(tr("Starting user profiles..."), "Abort", add_profile_list.size(), this,
 				 "starting user profiles", true);
 	progress.setCaption(PRODUCT_NAME);
 	progress.setMinimumDuration(200);
@@ -2374,7 +2383,7 @@ void MphoneForm::newUsers(const list<string> &profiles)
 				error_msg += "\n";
 				error_msg += dup_user->get_profile_name();
 				error_msg += "\n\n";
-				error_msg += tr("You can only run multiple profiles for different users.");
+				error_msg += tr("You can only run multiple profiles for different users.").ascii();
 				
 				log_file->write_report(error_msg,
 					"MphoneForm::newUsers", 
@@ -2757,10 +2766,10 @@ void MphoneForm::processCryptLabelClick(int line)
 // Show popup menu to access voice mail
 void MphoneForm::popupMenuVoiceMail(const QPoint &pos)
 {
-	QPopupMenu menu(this);
-	QIconSet vmIcon(QPixmap::fromMimeSource("mwi_none16.png"));
-	vmIcon.setPixmap(QPixmap::fromMimeSource("mwi_none16_dis.png"),
-		       QIconSet::Automatic, QIconSet::Disabled);
+	Q3PopupMenu menu(this);
+	QIcon vmIcon(qPixmapFromMimeSource("mwi_none16.png"));
+	vmIcon.setPixmap(qPixmapFromMimeSource("mwi_none16_dis.png"),
+		       QIcon::Automatic, QIcon::Disabled);
 	
 	list<t_user *>user_list = phone->ref_users();
 	map<int, t_user *> vm;
@@ -2949,7 +2958,7 @@ void MphoneForm::populateBuddyList()
 	}
 }
 
-void MphoneForm::showBuddyListPopupMenu(QListViewItem *item, const QPoint &pos)
+void MphoneForm::showBuddyListPopupMenu(Q3ListViewItem *item, const QPoint &pos)
 {
 	if (!item) return;
 	
@@ -2963,7 +2972,7 @@ void MphoneForm::showBuddyListPopupMenu(QListViewItem *item, const QPoint &pos)
 
 void MphoneForm::doCallBuddy()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BuddyListViewItem *item = dynamic_cast<BuddyListViewItem *>(qitem);
 	if (!item) return;
 	
@@ -2973,7 +2982,7 @@ void MphoneForm::doCallBuddy()
 	phoneInvite(user_config, buddy->get_sip_address().c_str(), "", false);
 }
 
-void MphoneForm::doMessageBuddy(QListViewItem *qitem)
+void MphoneForm::doMessageBuddy(Q3ListViewItem *qitem)
 {	
 	BuddyListViewItem *item = dynamic_cast<BuddyListViewItem *>(qitem);
 	if (!item) return;
@@ -2985,13 +2994,13 @@ void MphoneForm::doMessageBuddy(QListViewItem *qitem)
 
 void MphoneForm::doMessageBuddy()
 {
-	QListViewItem *item = buddyListView->currentItem();
+	Q3ListViewItem *item = buddyListView->currentItem();
 	doMessageBuddy(item);
 }
 
 void MphoneForm::doEditBuddy()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BuddyListViewItem *item = dynamic_cast<BuddyListViewItem *>(qitem);
 	if (!item) return;
 	
@@ -3004,7 +3013,7 @@ void MphoneForm::doEditBuddy()
 
 void MphoneForm::doDeleteBuddy()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BuddyListViewItem *item = dynamic_cast<BuddyListViewItem *>(qitem);
 	if (!item) return;
 	
@@ -3030,7 +3039,7 @@ void MphoneForm::doDeleteBuddy()
 
 void MphoneForm::doAddBuddy()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BLViewUserItem *item = dynamic_cast<BLViewUserItem *>(qitem);
 	if (!item) return;
 	
@@ -3046,7 +3055,7 @@ void MphoneForm::doAddBuddy()
 
 void MphoneForm::doAvailabilityOffline()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BLViewUserItem *item = dynamic_cast<BLViewUserItem *>(qitem);
 	if (!item) return;
 	
@@ -3058,7 +3067,7 @@ void MphoneForm::doAvailabilityOffline()
 
 void MphoneForm::doAvailabilityOnline()
 {
-	QListViewItem *qitem = buddyListView->currentItem();
+	Q3ListViewItem *qitem = buddyListView->currentItem();
 	BLViewUserItem *item = dynamic_cast<BLViewUserItem *>(qitem);
 	if (!item) return;
 	

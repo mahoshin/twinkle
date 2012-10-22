@@ -1,3 +1,6 @@
+//Added by qt3to4:
+#include <QEvent>
+#include <QMouseEvent>
 /****************************************************************************
 ** ui.h extension file, included from the uic-generated form implementation.
 **
@@ -32,6 +35,11 @@ void DiamondcardProfileForm::init()
 {
 	user_config = NULL;
 	destroy_user_config = false;
+
+	accountIdLineEdit = findChild<QLineEdit*>("accountIdLineEdit");
+    pinCodeLineEdit = findChild<QLineEdit*>("pinCodeLineEdit");
+    nameLineEdit = findChild<QLineEdit*>("nameLineEdit");
+    signUpTextLabel = findChild<QLabel*>("signUpTextLabel");
 	
 	QRegExp rxNoSpace("\\S*");
 	accountIdLineEdit->setValidator(new QRegExpValidator(rxNoSpace, this));
