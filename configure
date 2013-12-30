@@ -5951,12 +5951,12 @@ if test -n "$CCRTP_CFLAGS"; then
     pkg_cv_CCRTP_CFLAGS="$CCRTP_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libccrtp1 >= 1.6.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libccrtp1 >= 1.6.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libccrtp >= 1.6.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libccrtp >= 1.6.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_CCRTP_CFLAGS=`$PKG_CONFIG --cflags "libccrtp1 >= 1.6.0" 2>/dev/null`
+  pkg_cv_CCRTP_CFLAGS=`$PKG_CONFIG --cflags "libccrtp >= 1.6.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5968,12 +5968,12 @@ if test -n "$CCRTP_LIBS"; then
     pkg_cv_CCRTP_LIBS="$CCRTP_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libccrtp1 >= 1.6.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libccrtp1 >= 1.6.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libccrtp >= 1.6.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libccrtp >= 1.6.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_CCRTP_LIBS=`$PKG_CONFIG --libs "libccrtp1 >= 1.6.0" 2>/dev/null`
+  pkg_cv_CCRTP_LIBS=`$PKG_CONFIG --libs "libccrtp >= 1.6.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -5994,14 +5994,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        CCRTP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libccrtp1 >= 1.6.0" 2>&1`
+	        CCRTP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libccrtp >= 1.6.0" 2>&1`
         else
-	        CCRTP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libccrtp1 >= 1.6.0" 2>&1`
+	        CCRTP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libccrtp >= 1.6.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$CCRTP_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (libccrtp1 >= 1.6.0) were not met:
+	as_fn_error $? "Package requirements (libccrtp >= 1.6.0) were not met:
 
 $CCRTP_PKG_ERRORS
 
@@ -6315,9 +6315,9 @@ done
 ) | grep '^-I' | sed -e 's|^-I||' | xargs echo INCLUDEPATH += >> $QT_INCL_PRO
 
 #echo "INCLUDEPATH += `$CCGNU2_CONFIG --includes`" | sed -e s/-I//g > $QT_INCL_PRO
-# libccrtp1(ccrtp) depend from libccgnu2(commoncpp2) and
+# libccrtp(ccrtp) depend from libccgnu2(commoncpp2) and
 # should include above flags !
-echo "INCLUDEPATH += `$PKG_CONFIG --cflags-only-I libccrtp1`" | sed -e s/-I//g >> $QT_INCL_PRO
+echo "INCLUDEPATH += `$PKG_CONFIG --cflags-only-I libccrtp`" | sed -e s/-I//g >> $QT_INCL_PRO
 echo "INCLUDEPATH += `$PKG_CONFIG --cflags-only-I libxml-2.0`" | sed -e s/-I//g >> $QT_INCL_PRO
 
 # get libraries specified on command line
